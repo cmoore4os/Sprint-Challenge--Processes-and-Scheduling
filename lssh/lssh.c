@@ -32,7 +32,7 @@
 char **parse_commandline(char *str, char **args, int *args_count)
 {
     char *token;
-    
+
     *args_count = 0;
 
     token = strtok(str, " \t\n\r");  // split str at these chars; this gets the first token
@@ -46,6 +46,31 @@ char **parse_commandline(char *str, char **args, int *args_count)
     args[*args_count] = NULL; // sets the last arg to NULL
 
     return args;
+}
+
+void execProgram (char **args) { // don't understand why ** and not *
+
+	pid_t pid; // gets a process id
+	int isFinished; // used by wait to signal child process is finished
+
+	 /* forks a child process, but throws error if not able to fork*/
+	if ((pid = fork()) < 0) {
+			  printf("ERROR: Unable to fork\n");
+			  exit(1);
+		 }
+		 /* if fork() worked: execute program if there are args or throw error if no args*/
+     else if (pid == 0) {
+          if (execvp(*args, args) < 0) {
+               printf("ERROR:Unable to run command\n");
+               exit(1);
+          }
+     }/* for the parent: wait for child to complete  */
+     else {
+          while (wait(&isFinished) != pid){
+			continue;  /* keeps looping over and over till child finish */
+		}
+
+     }
 }
 
 /**
@@ -89,7 +114,13 @@ int main(void)
             break;
         }
         // do something here if the args_count != 0; maybe run command
-
+        //int execvpe( const char * file,
+             //char * const argv[],
+             //char * const envp[] );
+        if (args_count) {
+			// add event to exec
+			execProgram(args);
+		}
         #if DEBUG
 
         // Some debugging output
