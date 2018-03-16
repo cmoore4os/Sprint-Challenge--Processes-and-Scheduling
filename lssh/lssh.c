@@ -35,15 +35,15 @@ char **parse_commandline(char *str, char **args, int *args_count)
     
     *args_count = 0;
 
-    token = strtok(str, " \t\n\r");
+    token = strtok(str, " \t\n\r");  // split str at these chars; this gets the first token
 
-    while (token != NULL && *args_count < MAX_TOKENS - 1) {
+    while (token != NULL && *args_count < MAX_TOKENS - 1) {   // this get the rest of the tokens up to 100
         args[(*args_count)++] = token;
 
         token = strtok(NULL, " \t\n\r");
     }
 
-    args[*args_count] = NULL;
+    args[*args_count] = NULL; // sets the last arg to NULL
 
     return args;
 }
@@ -54,7 +54,7 @@ char **parse_commandline(char *str, char **args, int *args_count)
 int main(void)
 {
     // Holds the command line the user types in
-    char commandline[COMMANDLINE_BUFSIZE];
+    char commandline[COMMANDLINE_BUFSIZE]; // commandline can be no more than 1024 chars
 
     // Holds the parsed version of the command line
     char *args[MAX_TOKENS];
@@ -88,6 +88,7 @@ int main(void)
         if (strcmp(args[0], "exit") == 0) {
             break;
         }
+        // do something here if the args_count != 0; maybe run command
 
         #if DEBUG
 
